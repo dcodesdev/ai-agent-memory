@@ -8,5 +8,10 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.88",
+    "ai": "^5.0.116",
+    "zod": "^4.2.1"
   }
 }
