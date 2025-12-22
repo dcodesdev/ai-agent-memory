@@ -1,6 +1,10 @@
 import { handleRoot } from "./routes/index"
 import { handleHealth } from "./routes/health"
 import { handleChat } from "./routes/chat"
+import { runMigrations } from "./migrate"
+
+await runMigrations()
+console.log("Migrations completed")
 
 const server = Bun.serve({
   port: process.env.PORT || 3000,
