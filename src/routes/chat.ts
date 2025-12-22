@@ -1,6 +1,6 @@
 import { streamText, stepCountIs } from "ai"
 import { openai } from "@ai-sdk/openai"
-import { z, ZodError } from "zod"
+import { z } from "zod"
 import { tools } from "../tools"
 import { res } from "../utils"
 
@@ -14,36 +14,29 @@ const chatRequestSchema = z
   })
 
 export async function handleChat(req: Request) {
-  try {
-    const body = await req.json()
-    const validated = chatRequestSchema.parse(body)
-    const prompt = validated.prompt || validated.message!
+  const body = await req.json()
+  const validated = chatRequestSchema.safeParse(body)
 
-    const result = streamText({
-      model: openai("gpt-4o-mini"),
-      system:
-        "You are a helpful AI assistant that can perform various tasks using tools.",
-      prompt,
-      tools,
-      stopWhen: stepCountIs(10),
-    })
-
-    return result.toTextStreamResponse()
-  } catch (error) {
-    if (error instanceof ZodError) {
-      return res.json(
-        {
-          error: "Validation error",
-          details: error.issues,
-        },
-        400
-      )
-    }
+  if (!validated.success) {
     return res.json(
       {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: "Validation error",
+        details: validated.error.issues[0]?.message || "Unknown error",
       },
-      500
+      400
     )
   }
+
+  const prompt = validated.data.prompt || validated.data.message!
+
+  const result = streamText({
+    model: openai("gpt-4o-mini"),
+    system:
+      "You are a helpful AI assistant that can perform various tasks using tools.",
+    prompt,
+    tools,
+    stopWhen: stepCountIs(10),
+  })
+
+  return result.toTextStreamResponse()
 }
