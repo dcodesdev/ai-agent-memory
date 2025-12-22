@@ -1,15 +1,17 @@
 {
   "name": "ai-agent-memory",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "main": "src/index.ts",
   "scripts": {
     "start": "bun run src/index.ts",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "knip": "knip"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "knip": "^5.76.3"
   },
   "peerDependencies": {
     "typescript": "^5"
