@@ -2,6 +2,7 @@ import { generateText, stepCountIs } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { z, ZodError } from "zod"
 import { tools } from "../tools"
+import { res } from "../utils"
 
 const chatRequestSchema = z
   .object({
@@ -27,42 +28,31 @@ export async function handleChat(req: Request) {
       stopWhen: stepCountIs(10),
     })
 
-    return new Response(
-      JSON.stringify({
-        text: result.text,
-        steps: result.steps.length,
-        toolResults: result.steps
-          .flatMap((step) => step.toolCalls || [])
-          .map((call) => ({
-            toolName: call.toolName,
-            input: call.input,
-          })),
-      }),
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    )
+    return res.json({
+      text: result.text,
+      steps: result.steps.length,
+      toolResults: result.steps
+        .flatMap((step) => step.toolCalls || [])
+        .map((call) => ({
+          toolName: call.toolName,
+          input: call.input,
+        })),
+    })
   } catch (error) {
     if (error instanceof ZodError) {
-      return new Response(
-        JSON.stringify({
+      return res.json(
+        {
           error: "Validation error",
           details: error.issues,
-        }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+        },
+        400
       )
     }
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : "Unknown error",
-      }),
+    return res.json(
       {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      500
     )
   }
 }
