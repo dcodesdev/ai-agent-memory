@@ -1,6 +1,6 @@
 # ai-agent-memory
 
-AI agent built with Vercel AI SDK.
+AI agent web server built with Vercel AI SDK and Bun.
 
 ## Setup
 
@@ -16,15 +16,39 @@ export OPENAI_API_KEY=your_api_key_here
 
 ## Usage
 
-Run the agent with a prompt:
-```bash
-bun run index.ts "What time is it?"
-```
-
-Or run without arguments for the default prompt:
+Start the server:
 ```bash
 bun run index.ts
 ```
+
+The server will run on `http://localhost:3000` (or the port specified in `PORT` env var).
+
+## API Endpoints
+
+### POST /chat
+Send a prompt to the AI agent.
+
+**Request:**
+```json
+{
+  "prompt": "What time is it?"
+}
+```
+
+**Response:**
+```json
+{
+  "text": "The current time is...",
+  "steps": 2,
+  "toolResults": [...]
+}
+```
+
+### GET /health
+Health check endpoint.
+
+### GET /
+API information.
 
 ## Features
 
