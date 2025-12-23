@@ -89,24 +89,8 @@ The application uses PostgreSQL for persistent memory storage. Migrations run au
 
 This project is configured for deployment on Neptune. See `neptune.json` for configuration.
 
-To deploy:
+To deploy, set up the Neptune MCP server and ask your AI agent to deploy the project. The agent will handle provisioning resources, setting secrets, and deploying the application.
 
-1. Provision resources:
-
-```bash
-neptune provision
-```
-
-2. Set secrets (if needed):
-
-```bash
-neptune set-secret OPENAI_API_KEY
-```
-
-3. Deploy:
-
-```bash
-neptune deploy
-```
+For more information, see the [Neptune documentation](https://docs.neptune.dev).
 
 This project was created using `bun init` in bun v1.3.5. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
