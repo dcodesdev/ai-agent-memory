@@ -7,7 +7,7 @@ await runMigrations()
 console.log("Migrations completed")
 
 const server = Bun.serve({
-  port: process.env.PORT || 3000,
+  port: process.env.PORT || 8080,
   async fetch(req) {
     const url = new URL(req.url)
 
